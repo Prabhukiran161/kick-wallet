@@ -1,5 +1,5 @@
 import { BLOCKCHAINS } from "../constants/blockchain";
-import { WalletCard } from "./ui/walletCard";
+import { WalletCard } from "./ui/WalletCard";
 export const ChainSelector = ({ onSelect }) => {
   return (
     <section className="w-full">
