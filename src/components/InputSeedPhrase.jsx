@@ -8,10 +8,10 @@ export const InputSeedPhrase = ({ onGenerate }) => {
       <div className="max-w-7xl mx-auto py-8 md:py-16">
         {/* Layout */}
         <div className="px-6 md:px-0">
-          <h1 className="text-xl md:text-5xl font-semibold mb-2 md:mb-4 text-center">
+          <h1 className="text-3xl md:text-5xl font-semibold mb-2 md:mb-4 text-center">
             Secret Recovery Phrase
           </h1>
-          <p className="text-sm md:text-xl text-center mb-4">
+          <p className="text-base md:text-xl text-center mb-4">
             Save these words in a safe place.
           </p>
           <div className="max-w-5xl mx-auto border border-gray-300 rounded-xl p-4 md:p-6">
