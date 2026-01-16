@@ -1,6 +1,7 @@
 import { WalletItem } from "./WalletItem";
+import { Account } from "./Account";
 
-export const WalletList = ({ chain, wallets, onGenerate, onDeleteWallet }) => {
+export const WalletList = ({ chain, wallets, onGenerate, onDeleteWallet, onFetchBalance }) => {
   return (
     <section className="w-full">
       {/* Wrapper */}
@@ -8,7 +9,12 @@ export const WalletList = ({ chain, wallets, onGenerate, onDeleteWallet }) => {
         {/* Layout */}
         <div>
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-xl md:text-4xl font-semibold">{chain?.name}</h2>
+            <div className="flex items-center gap-4">
+              <img className="w-10 h-10" src={chain?.image} alt={chain?.name} />
+              <h2 className="text-xl md:text-4xl font-semibold">
+                {chain?.name}
+              </h2>
+            </div>
             <div>
               <button
                 onClick={() => onGenerate()}
@@ -26,11 +32,7 @@ export const WalletList = ({ chain, wallets, onGenerate, onDeleteWallet }) => {
           </div>
           <div className="flex flex-wrap justify-center gap-8">
             {wallets.map((wallet, index) => (
-              <WalletItem
-                key={index}
-                wallet={wallet}
-                onDelete={onDeleteWallet}
-              />
+              <Account key={index} wallet={wallet} chain={chain} onDelete={onDeleteWallet} onBalance={onFetchBalance} />
             ))}
           </div>
         </div>

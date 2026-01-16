@@ -50,13 +50,43 @@ export const useHDWallet = (showToast) => {
   }, [get]);
 
   //Blockchain Selector
-  const selectBlockchain = useCallback((chainName) => {
-    const chain = BLOCKCHAINS.find((chain) => chain.name == chainName);
-    setSelectedChain(chain);
-    showToast("Blockchain selected. Please generate a wallet.");
-    setWallets([]);
-    setMnemonic("");
-  }, [showToast]);
+  const selectBlockchain = useCallback(
+    (chainName) => {
+      const chain = BLOCKCHAINS.find((chain) => chain.name == chainName);
+      setSelectedChain(chain);
+      showToast("Blockchain selected. Please generate a wallet.");
+      setWallets([]);
+      setMnemonic("");
+    },
+    [showToast]
+  );
+
+  //Fetch balance
+  const fetchBalanceWallet = useCallback(
+    async (walletIndex, publicKey) => {
+      try {
+        const balance = await selectedChain.fetchBalance(publicKey);
+        console.log("Fetching");
+
+        setWallets((prev) =>
+          prev.map((w) =>
+            w.index === walletIndex ? { ...w, balance, isLoading: false } : w
+          )
+        );
+      } catch (error) {
+        console.error("Failed to fetch Balance", error);
+
+        setWallets((prev) =>
+          prev.map((w) =>
+            w.index === walletIndex
+              ? { ...w, balance: "-", isLoading: false }
+              : w
+          )
+        );
+      }
+    },
+    [selectedChain]
+  );
 
   //Add Wallet
   const addWallet = useCallback(
@@ -74,40 +104,46 @@ export const useHDWallet = (showToast) => {
         index: indexWallet,
         publicKey: result.publicKey,
         privateKey: result.privateKey,
+        balance: null,
+        isLoading: true,
       };
 
       setWallets((prev) => [...prev, wallet]);
+      fetchBalanceWallet(indexWallet, wallet.publicKey);
 
       indexRef.current += 1;
 
       showToast("Wallet generated successfully!");
     },
-    [selectedChain, mnemonic, showToast]
+    [selectedChain, mnemonic, showToast, fetchBalanceWallet]
   );
 
   //Delete Wallet
-  const deleteWallet = useCallback((walletIndex = null) => {
-    if (walletIndex === null) {
-      setWallets([]);
-      setMnemonic("");
-      setSelectedChain(null);
-      indexRef.current = 0;
-      showToast("All Wallets deleted successfully.");
-      return;
-    }
-    setWallets((prevWallets) => {
-      const updatedWallets = prevWallets.filter(
-        (wallet) => wallet.index !== walletIndex
-      );
-
-      if (updatedWallets.length === 0) {
+  const deleteWallet = useCallback(
+    (walletIndex = null) => {
+      if (walletIndex === null) {
+        setWallets([]);
         setMnemonic("");
         setSelectedChain(null);
+        indexRef.current = 0;
+        showToast("All Wallets deleted successfully.");
+        return;
       }
-      return updatedWallets;
-    });
-    showToast("Wallet deleted successfully.");
-  }, [showToast]);
+      setWallets((prevWallets) => {
+        const updatedWallets = prevWallets.filter(
+          (wallet) => wallet.index !== walletIndex
+        );
+
+        if (updatedWallets.length === 0) {
+          setMnemonic("");
+          setSelectedChain(null);
+        }
+        return updatedWallets;
+      });
+      showToast("Wallet deleted successfully.");
+    },
+    [showToast]
+  );
 
   return {
     // States
@@ -118,5 +154,6 @@ export const useHDWallet = (showToast) => {
     selectBlockchain,
     addWallet,
     deleteWallet,
+    fetchBalanceWallet
   };
 };

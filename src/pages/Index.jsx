@@ -11,12 +11,12 @@ export const Index = () => {
 
   const showToast = (message) => {
     const id = Date.now();
-    setToasts((prev) => [...prev,{id,message}]);
+    setToasts((prev) => [...prev, { id, message }]);
 
-    setTimeout(()=>{
-      setToasts((prev)=> prev.filter( (toast) => toast.id !== id));
-    },3000)
-  }
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    }, 3000);
+  };
 
   const {
     selectedChain,
@@ -25,9 +25,9 @@ export const Index = () => {
     selectBlockchain,
     addWallet,
     deleteWallet,
+    fetchBalanceWallet,
   } = useHDWallet(showToast);
 
-  
   return (
     <>
       {/* 1. Show ChainSelector - Only if chain is not selected*/}
@@ -45,6 +45,7 @@ export const Index = () => {
             wallets={wallets}
             onGenerate={addWallet}
             onDeleteWallet={deleteWallet}
+            onFetchBalance={fetchBalanceWallet}
           />
         </>
       )}

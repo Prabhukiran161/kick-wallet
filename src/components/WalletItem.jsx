@@ -7,7 +7,7 @@ export const WalletItem = ({ wallet, onDelete }) => {
     <div className="border border-gray-300/75 rounded-lg w-80 md:w-7xl">
       <div className="flex justify-between items-center p-4 md:p-8">
         <h3 className="text-lg md:text-3xl font-medium">
-          Wallet {wallet?.index + 1}
+          Account {wallet?.index + 1}
         </h3>
         <button
           onClick={() => onDelete(wallet.index)}
